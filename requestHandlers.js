@@ -39,8 +39,8 @@ function upload(response, request) {
     });
     response.writeHead(200, {"Content-Type": "text/html"});
     response.write("received image:<br/>");
-45  response.write("<img src='/show' />");
-46  response.end();
+    response.write("<img src='/show' />");
+    response.end();
   });
 }
 
