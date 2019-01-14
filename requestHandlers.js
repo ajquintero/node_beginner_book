@@ -7,19 +7,21 @@ function start() {
     var content = "empty";
     
     exec("ls -lah", function (error, stdout, stderr) {
-      content = stdout;
+      Response.writeHead(200, {"Content-Type": "text/plain"});
+      Response.write(stdout);
+      Response.end();
     });
 
-    return content;
   }
 
-  
 }
 
 
-function upload() {
+function upload(response) {
   console.log("Request handler 'upload' was called.");
-  return "Hello Upload";
+  response.writeHead(200, {"Content-Type": "text/plain"});
+  response.write("Hello Upload");
+  response.end;
 }
 
 exports.start = start;
