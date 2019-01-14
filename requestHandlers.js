@@ -1,8 +1,9 @@
 
 var querystring = require("querystring");
   fs = require("fs");
+  formidable = require("formidable");
 
-function start(response, postData) {
+function start(response) {
   console.log("Request handler 'start' was called.");
 
   var body = `'<html>'+
@@ -25,18 +26,29 @@ function start(response, postData) {
 }
 
 
-function upload(response, postData) {
+function upload(response, request) {
   console.log("Request handler 'upload' was called.");
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.write("You've sent: " +querystring.parse(postData).text);
-  response.end;
+  form.parse(request, function(error, fields, files) {
+    console.log("parsing done");
+
+    fs.rename(files.upload.path, "/tmp/test.png", function(error) {
+      if(error) {
+        fs.unlink("/tmp/test.png");
+        fs.rename(files.upload.path, "/tmp/test.png");
+      }
+    });
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write("received image:<br/>");
+45  response.write("<img src='/show' />");
+46  response.end();
+  });
 }
 
 function show(response) {
   console.log("Request handler 'show' was called.");
   response.writeHead(200, {"Content-Type": "image/png"});
   fs.createReadStream("/tmp/test.png").pipe(response);
- }
+}
 
 exports.start = start;
 exports.upload = upload;
